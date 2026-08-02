@@ -66,23 +66,36 @@ endif
 :set undofile     " persistent undo across sessions (pairs with Ctrl-l Undotree)
 	
 
+" <Space> as leader. Custom bindings live here rather than in the Ctrl
+" namespace, where every key already means something to vim: Ctrl-f page
+" forward, Ctrl-l redraw, Ctrl-x decrement number, Ctrl-t pop tag stack,
+" Ctrl-g file info. All of those are now left intact.
+let mapleader = " "
+nnoremap <Space> <Nop>
+
 let g:NERDTreeDirArrowExpandable="+"
 let g:NERDTreeDirArrowCollapsible="~"
 
-nnoremap <C-f> :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
-nnoremap <C-l> :UndotreeToggle<CR>
-nnoremap <C-g> :Files<CR>
-" Ctrl-p (not Ctrl-r, which stays vim's redo) for project-wide ripgrep search
+nnoremap <leader>e :NERDTreeToggle<CR>
+nnoremap <leader>f :Files<CR>
+nnoremap <leader>r :Rg<CR>
+nnoremap <leader>u :UndotreeToggle<CR>
+" Ctrl-p kept as a second binding for :Rg — in normal mode it is just a
+" synonym for `k`, so it shadows nothing worth keeping. (Ctrl-r is
+" deliberately left alone: it is vim's redo.)
 nnoremap <C-p> :Rg<CR>
 
-" Terminal mapping — works from normal, insert and terminal mode (like
-" VS Code's Ctrl+`). Insert-mode Ctrl-x normally prefixes vim's built-in
-" completion submode, which nvim-cmp makes redundant.
-nnoremap <C-x> :FloatermToggle<CR>
-inoremap <C-x> <Esc>:FloatermToggle<CR>
-tnoremap <C-x> <C-\><C-n>:FloatermToggle<CR>
+" NERDTree used to own Ctrl-n as well, but vim-visual-multi defaults to
+" Ctrl-n and its plugin file is sourced at plug#end() — i.e. after this
+" point — so that mapping was being silently overwritten anyway.
+" Multi-cursor keeps Ctrl-n; the file explorer is <leader>e.
+
+" Floating terminal on F7 (pairs with F6 Aerial). It has to work from insert
+" and terminal mode too, where <leader> cannot reach, so it gets an F-key
+" instead of a leader mapping.
+nnoremap <F7> :FloatermToggle<CR>
+inoremap <F7> <Esc>:FloatermToggle<CR>
+tnoremap <F7> <C-\><C-n>:FloatermToggle<CR>
 
 
 " Insert-mode <Tab>/<S-Tab> are smart mappings defined in the lua block below:
@@ -97,7 +110,7 @@ vnoremap <S-Tab> <gv
 " let g:coc_snippet_next = '<Tab>'
 " let g:coc_snippet_prev = '<S-Tab>'
 
-nmap <F6> :AerialToggle<CR>
+nnoremap <F6> :AerialToggle<CR>
 
 call plug#begin('~/.config/nvim/plugged')
 

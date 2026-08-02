@@ -72,16 +72,21 @@ This repo sets `clipboard=unnamedplus` in `init.vim`, so the **default register 
 > **Gotcha 3 — `clipboard: No provider` on a remote server.** This means nvim couldn't find a clipboard tool (no xclip / wl-copy / DISPLAY). On SSH sessions the included `init.vim` falls back to **OSC 52** (nvim ≥ 0.10), which pipes yanks back through the terminal to your *local* clipboard. After updating, just `yy` and the line should be on your laptop's clipboard. Paste *into* vim from outside still needs terminal paste (Ctrl-Shift-V) — OSC 52 read is almost never supported by terminals.
 
 ### Custom mappings (this repo's `init.vim`)
+
+**Leader is `Space`.** Panel toggles and pickers live behind the leader so they
+don't shadow vim's built-in `Ctrl-` keys (`Ctrl-f` page forward, `Ctrl-l`
+clear search highlight + redraw, `Ctrl-x` decrement number, `Ctrl-t` pop tag
+stack, `Ctrl-g` file info — all still work).
+
 | Key | Action |
 |---|---|
-| `Ctrl-t` | Toggle NERDTree file explorer |
-| `Ctrl-n` | Open NERDTree |
-| `Ctrl-f` | Focus NERDTree |
-| `Ctrl-g` | `:Files` (fzf fuzzy file finder) |
-| `Ctrl-p` | `:Rg` (live ripgrep project search) |
-| `Ctrl-l` | Toggle Undotree (visual undo history) |
-| `Ctrl-x` | Toggle Floaterm floating terminal (from normal, insert and terminal mode) |
+| `Space e` | Toggle NERDTree file explorer |
+| `Space f` | `:Files` (fzf fuzzy file finder) |
+| `Space r` | `:Rg` (live ripgrep project search) |
+| `Space u` | Toggle Undotree (visual undo history) |
+| `Ctrl-p` | `:Rg` — second binding for the same thing (normal-mode `Ctrl-p` is just `k`) |
 | `F6` | Toggle Aerial code outline (symbols from LSP/treesitter, no ctags) |
+| `F7` | Toggle Floaterm floating terminal (from normal, insert and terminal mode) |
 | `Tab` / `Shift-Tab` (visual) | Indent right / left (keeps selection) |
 | `Tab` (insert) | **Smart**: accept AI ghost text if visible → else next completion item → else literal tab |
 | `Shift-Tab` (insert) | Prev completion item (literal shift-tab otherwise) |
@@ -95,7 +100,7 @@ basedpyright provides completions/types/auto-imports; ruff lints and **formats o
 | Key | Action |
 |---|---|
 | `K` | Hover docs |
-| `gd` | Go to definition |
+| `Ctrl-]` | Go to definition (via `tagfunc`; `Ctrl-t` jumps back) |
 | `grr` | List references |
 | `grn` | Rename symbol |
 | `gra` | Code action |
@@ -103,6 +108,11 @@ basedpyright provides completions/types/auto-imports; ruff lints and **formats o
 | `gO` | Document symbols |
 | `[d` / `]d` | Prev / next diagnostic |
 | `Ctrl-s` (insert) | Signature help |
+
+> **Not `gd`.** nvim 0.11 does *not* map `gd` to the LSP — plain `gd` is the old
+> built-in "search for the local declaration", which only looks at the current
+> buffer and is wrong as often as it's right. The LSP-backed jump is `Ctrl-]`
+> (nvim points `tagfunc` at the language server), and `Ctrl-t` pops back.
 
 ### AI completion (minuet-ai, local LLM)
 
@@ -129,7 +139,7 @@ Notes:
 ### Plugin shortcuts in `init.vim`
 - **vim-surround** — `ysiw)` wrap word in `()`, `cs"'` change `"` → `'`, `ds"` delete surrounding `"`.
 - **Commenting (built into nvim 0.10+)** — `gcc` toggle line comment, `gc<motion>` toggle range (e.g. `gcap` for paragraph, `gc` in visual mode).
-- **vim-visual-multi** — `Ctrl-N` on a word selects it; keep pressing to add the next occurrence (multiple cursors). `q` skips one, `Q` removes a cursor, `Esc` exits.
+- **vim-visual-multi** — `Ctrl-n` on a word selects it; keep pressing to add the next occurrence (multiple cursors). `q` skips one, `Q` removes a cursor, `Esc` exits. (`Ctrl-n` is exclusively multi-cursor's — NERDTree moved to `Space e`.)
 - **vim-move** — `Alt-j` / `Alt-k` move current line or visual selection down / up.
 - **vim-fugitive** — `:Git` status, `:Git blame`, `:Gdiffsplit`, `:Git log`.
 - **gitsigns.nvim** — change markers in the gutter automatically; on demand: `:Gitsigns blame_line`, `:Gitsigns preview_hunk`, `:Gitsigns reset_hunk`. No keymaps by design.
